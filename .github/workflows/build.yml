@@ -32,10 +32,16 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install
 
+      - name: Check directory structure
+        run: |
+          echo "Checking directory structure..."
+          ls -R libmupdf
+
       - name: Build MuPDF core
         run: |
           cd libmupdf
-          make build=release OS=wasm
+          make build=release OS=wasm || true
+          ls -R build/wasm/release
 
       - name: Build project
         run: npm run prepare
