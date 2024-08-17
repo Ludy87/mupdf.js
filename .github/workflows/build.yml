@@ -1,0 +1,34 @@
+name: Build MuPDF.js
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Emscripten
+        uses: emscripten-core/setup-emscripten@v2
+        with:
+          version: '3.1.55'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run prepare
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/
