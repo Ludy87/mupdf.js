@@ -35,6 +35,7 @@ jobs:
       - name: Check directory structure
         run: |
           echo "Checking directory structure..."
+          ls /
           ls -R libmupdf
 
       - name: Build MuPDF core
