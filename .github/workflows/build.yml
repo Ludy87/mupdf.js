@@ -29,8 +29,13 @@ jobs:
           ./emsdk activate 3.1.55
           source ./emsdk_env.sh
 
-      - name: Install dependencies
+      - name: Install Node.js dependencies
         run: npm install
+
+      - name: Build MuPDF core
+        run: |
+          cd libmupdf
+          make build=release OS=wasm
 
       - name: Build project
         run: npm run prepare
