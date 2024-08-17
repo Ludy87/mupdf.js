@@ -1,6 +1,7 @@
 name: Build MuPDF.js
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
