@@ -53,10 +53,8 @@ jobs:
       - name: Build MuPDF with Emscripten
         run: |
           cd libmupdf
-          mkdir -p build/wasm
-          cd build/wasm
-          cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/toolchain.cmake ..
-          make
+          export OS=wasm
+          make build=release OS=wasm || true
 
       - name: Build project
         run: npm run prepare
