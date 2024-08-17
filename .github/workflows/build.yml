@@ -16,6 +16,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libfreetype6-dev libx11-dev libgl1-mesa-dev libglu1-mesa-dev
+
+      - name: Clone MuPDF repository
+        run: |
+          git clone --recursive git://git.ghostscript.com/mupdf.git
+          cd mupdf
+          git submodule update --init
+
+      - name: Build MuPDF
+        run: |
+          cd mupdf
+          make prefix=/usr/local install
+
+      - name: Verify build
+        run: |
+          ls /usr/local/bin | grep mupdf
+          ls /usr/local/lib | grep libmupdf
+
       - name: Set up Emscripten
         run: |
           # Install dependencies
