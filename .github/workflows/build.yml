@@ -30,7 +30,7 @@ jobs:
       - name: Build MuPDF
         run: |
           cd mupdf
-          make prefix=/usr/local install
+          sudo make prefix=/usr/local install
 
       - name: Verify build
         run: |
