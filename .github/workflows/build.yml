@@ -32,6 +32,8 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install
 
+      - run: npm install mupdf
+
       - name: Check directory structure
         run: |
           echo "Checking directory structure..."
