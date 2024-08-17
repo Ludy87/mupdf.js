@@ -19,28 +19,23 @@ jobs:
       - name: Set up dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake libfreetype6-dev libx11-dev libxext-dev libxrandr-dev libxinerama-dev libxcursor-dev libgl1-mesa-dev libglu1-mesa-dev libxi-dev
+          sudo apt-get install -y build-essential cmake libfreetype6-dev libx11-dev libxext-dev libxrandr-dev libxinerama-dev libxcursor-dev libgl1-mesa-dev libglu1-mesa-dev libxi-dev freeglut3-dev
 
-      # Install freeglut
-      - name: Install freeglut
-        run: |
-          sudo apt-get install -y freeglut3-dev
+      # - name: Clone MuPDF repository
+      #   run: |
+      #     git clone --recursive git://git.ghostscript.com/mupdf.git libmupdf
+      #     cd libmupdf
+      #     git submodule update --init
 
-      - name: Clone MuPDF repository
-        run: |
-          git clone --recursive git://git.ghostscript.com/mupdf.git
-          cd mupdf
-          git submodule update --init --recursive
+      # - name: Build MuPDF
+      #   run: |
+      #     cd libmupdf
+      #     sudo make prefix=/usr/local install
 
-      - name: Build MuPDF
-        run: |
-          cd mupdf
-          sudo make prefix=/usr/local install
-
-      - name: Verify build
-        run: |
-          ls /usr/local/bin | grep mupdf
-          ls /usr/local/lib | grep libmupdf
+      # - name: Verify build
+      #   run: |
+      #     ls /usr/local/bin | grep mupdf || echo "No binaries found"
+      #     ls /usr/local/lib | grep libmupdf || echo "No libraries found"
 
       - name: Set up Emscripten
         run: |
@@ -55,29 +50,13 @@ jobs:
           ./emsdk activate 3.1.55
           source ./emsdk_env.sh
 
-      - name: Install Node.js dependencies
-        run: npm install
-
-      - run: npm install mupdf
-
-      - name: Check directory structure
+      - name: Build MuPDF with Emscripten
         run: |
-          echo "Checking directory structure..."
-          ls -R ${{ github.workspace }}/libmupdf
-          cd /libmupdf
-          ls
-
-      - name: Check for Makefile
-        run: |
-          echo "Checking for Makefile in libmupdf..."
-          test -f ${{ github.workspace }}/libmupdf/Makefile && echo "Makefile found" || echo "No Makefile found"
-
-      - name: Build MuPDF core
-        run: |
-          cd ${{ github.workspace }}/libmupdf
-          export OS=wasm
-          make build=release OS=wasm || true
-          ls -R build/wasm/release
+          cd libmupdf
+          mkdir -p build/wasm
+          cd build/wasm
+          cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=$EMSCRIPTEN/toolchain.cmake ..
+          make
 
       - name: Build project
         run: npm run prepare
@@ -86,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: dist/
+          path: libmupdf/dist/
 
       - name: Set up git config
         run: |
