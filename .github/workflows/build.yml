@@ -40,7 +40,7 @@ jobs:
 
       - name: Build MuPDF core
         run: |
-          cd libmupdf
+          cd ${{ github.workspace }}/libmupdf
           make build=release OS=wasm || true
           ls -R build/wasm/release
 
