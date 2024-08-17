@@ -35,8 +35,7 @@ jobs:
       - name: Check directory structure
         run: |
           echo "Checking directory structure..."
-          ls ${{ github.workspace }}
-          ls -R libmupdf
+          ls -R ${{ github.workspace }}/libmupdf
 
       - name: Build MuPDF core
         run: |
