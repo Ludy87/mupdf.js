@@ -39,7 +39,7 @@
     "prepare": "bash build.sh"
   },
   "devDependencies": {
-    "@types/node": "latest",
+    "@types/node": "^22.4.0",
     "typescript": "latest"
   }
 }
